@@ -13,7 +13,7 @@ public class Wallet {
 	//Acts as our address for transactions
 	public PublicKey publicKey;
 
-	Wallet(){
+	public Wallet(){
 		generateKeyPair();
 	}
 

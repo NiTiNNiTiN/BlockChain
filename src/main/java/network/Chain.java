@@ -1,14 +1,39 @@
 package network;
+import java.security.Security;
 import java.util.ArrayList;
 
 import com.google.gson.GsonBuilder;
+
+import crypto.Transaction;
+import crypto.Wallet;
 
 public class Chain {
 
 	public static ArrayList<Block> blockchain = new ArrayList<Block>();
 	public static int difficulty = 5;
+	public static Wallet walletA;
+	public static Wallet walletB;
 
 	public static void main(String[] args) {
+		
+		//Setup Bouncy Castle as security service provider
+		//Ignore if Bouncy castle gives access restriction error, It will still run
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		walletA = new Wallet();
+		walletB = new Wallet();
+		
+		//Test public and private keys
+		System.out.println("Private Key of Sender : " + Utility.getStringFromKey(walletA.privateKey));
+		System.out.println("Public Key of Sender : " + Utility.getStringFromKey(walletA.publicKey));
+		
+		Transaction transaction = new Transaction(walletA.publicKey, walletB.publicKey, 5, null);
+		transaction.generateSignature(walletA.privateKey);
+		
+		//Verify the signature
+		System.out.println("Signature Verification Result : " + transaction.verifySignature());
+		
+		
+		/*
 		blockchain.add( new Block("FirstBlock", "0"));
 		System.out.println("Mining First Block :");
 		blockchain.get( ( blockchain.size()-1)).mineBlock(difficulty);
@@ -21,6 +46,7 @@ public class Chain {
 
 		System.out.println("BlockChain validity : " + isChainValid());
 		System.out.println( blockchainJson);
+		*/
 	}
 
 	public static boolean isChainValid() {
